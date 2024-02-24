@@ -1,0 +1,10 @@
+replicaCount: 1
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+service:
+  name: ""
+  port: 80
+containerPorts:
+  http: ""

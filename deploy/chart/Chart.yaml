@@ -1,0 +1,4 @@
+apiVersion: v2
+name: web-server-challenge
+description: A Helm chart for deploying application
+version: 0.0.1

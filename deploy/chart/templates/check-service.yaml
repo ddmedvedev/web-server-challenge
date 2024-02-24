@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: check-service
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+spec:
+  template:
+    spec:
+      containers:
+      - name: check-service
+        image: alpine:3.19.1
+        command:
+          - "/bin/sh"
+          - "-c"
+          - |
+            apk update && apk add curl
+            RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://{{ .Values.service.name }}:{{ .Values.service.port }})
+            echo "HTTP response code: $RESPONSE"
+            if [ "$RESPONSE" != "200" ]; then
+              echo "Failed to access the service at http://{{ .Values.service.name }}:{{ .Values.service.port }}"
+              exit 1
+            else
+              echo "The service at http://{{ .Values.service.name }}:{{ .Values.service.port }} is accessible."
+            fi
+      restartPolicy: Never
+  backoffLimit: 1
